@@ -259,7 +259,7 @@ export default function ChallengesPage() {
                               : 'border-white/5 bg-white/3 text-white/40'
                       }`}
                     >
-                      {option.flagEmoji} {option.country}
+                      {option.country}
                     </button>
                   );
                 })}
