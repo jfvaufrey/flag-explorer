@@ -126,7 +126,7 @@ export function MiniQuiz({ flags, allFlags, onComplete }: MiniQuizProps) {
                           : 'border-white/5 bg-white/3 text-white/40'
                   }`}
                 >
-                  {option.flagEmoji} {option.country}
+                  {option.country}
                 </button>
               );
             })}
