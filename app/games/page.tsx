@@ -25,9 +25,9 @@ const games = [
   {
     id: 'flag-puzzle',
     title: 'Flag Puzzle',
-    description: 'Piece together flag puzzles from around the world! Coming soon...',
+    description: 'The flag flashes for 3 seconds — then reconstruct it from scrambled pieces!',
     icon: '🧩',
-    href: '/games',
+    href: '/games/flag-puzzle',
     color: '#7c3aed',
   },
   {
