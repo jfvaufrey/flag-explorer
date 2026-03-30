@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fredoka, Nunito } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "@/components/NavBar";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const fredokaOne = Fredoka({
   subsets: ["latin"],
@@ -47,6 +49,8 @@ export default function RootLayout({
         <footer className="border-t border-white/5 py-6 text-center text-white/30 text-sm">
           <p>⛵ Flag Explorer — Discover the World, One Flag at a Time!</p>
         </footer>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
