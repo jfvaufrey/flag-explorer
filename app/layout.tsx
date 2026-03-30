@@ -16,9 +16,17 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Flag Explorer - Discover the World!",
+  metadataBase: new URL('https://flag-explorer.org'),
+  title: "Flag Explorer | Learn World Flags",
   description: "Learn about the flags of every country in the world through interactive lessons, quizzes, and games. Perfect for kids and geography lovers!",
   keywords: ["flags", "geography", "education", "countries", "kids", "quiz"],
+  openGraph: {
+    title: "Flag Explorer | Learn World Flags",
+    description: "Learn about the flags of every country in the world through interactive lessons, quizzes, and games. Perfect for kids and geography lovers!",
+    url: "https://flag-explorer.org",
+    siteName: "Flag Explorer",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
