@@ -9,6 +9,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: 'https://flag-explorer.org/learn',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://flag-explorer.org/quiz',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
       url: 'https://flag-explorer.org/challenges',
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -17,8 +29,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: 'https://flag-explorer.org/leaderboard',
       lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.7,
+      changeFrequency: 'weekly',
+      priority: 0.8,
     },
     {
       url: 'https://flag-explorer.org/games',

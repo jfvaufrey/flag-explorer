@@ -20,14 +20,17 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   metadataBase: new URL('https://flag-explorer.org'),
   title: "Flag Explorer | Learn World Flags",
-  description: "Learn about the flags of every country in the world through interactive lessons, quizzes, and games. Perfect for kids and geography lovers!",
+  description: "A fun and interactive way for students grades 1-6 to learn world flags, capitals, and geography.",
   keywords: ["flags", "geography", "education", "countries", "kids", "quiz"],
   openGraph: {
     title: "Flag Explorer | Learn World Flags",
-    description: "Learn about the flags of every country in the world through interactive lessons, quizzes, and games. Perfect for kids and geography lovers!",
+    description: "A fun and interactive way for students grades 1-6 to learn world flags, capitals, and geography.",
     url: "https://flag-explorer.org",
     siteName: "Flag Explorer",
     type: "website",
+  },
+  verification: {
+    google: 'MExSqziAIRcuJCMALtJXPocQbIBLHY_9QOc4e29vHPQ',
   },
 };
 
