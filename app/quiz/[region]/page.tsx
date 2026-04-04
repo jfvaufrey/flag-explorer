@@ -114,6 +114,11 @@ export default function QuizPage({ params }: PageProps) {
         date: new Date().toISOString(),
         stars,
       });
+      fetch('/api/leaderboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: playerName, score, region: regionId, quiz_type: 'standard' }),
+      }).catch(() => {});
     }
   };
 
@@ -160,6 +165,12 @@ export default function QuizPage({ params }: PageProps) {
             <StarRating stars={stars} />
 
             <p className="text-white/80 mt-4 text-lg font-semibold">{message}</p>
+
+            {getPlayerName() && (
+              <p className="text-green-400 text-sm mt-2 font-medium">
+                Your score was saved to the global leaderboard! 🌍🏆
+              </p>
+            )}
 
             <div className="grid grid-cols-3 gap-3 my-6">
               <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4">
