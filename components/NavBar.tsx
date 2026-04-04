@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { getPlayerName, setPlayerName } from '@/lib/storage'
 
 const navLinks = [
@@ -15,29 +15,21 @@ const navLinks = [
 
 export function NavBar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [playerName, setName] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
-  const [nameInput, setNameInput] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [showPopover, setShowPopover] = useState(false);
 
   useEffect(() => {
     setName(getPlayerName());
   }, []);
 
-  useEffect(() => {
-    if (showEdit) {
-      setNameInput(playerName ?? '');
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  }, [showEdit, playerName]);
-
-  const handleNameSave = () => {
-    const trimmed = nameInput.trim();
-    if (!trimmed) return;
-    setPlayerName(trimmed);
-    setName(trimmed);
-    setShowEdit(false);
+  const handleChangeUser = () => {
+    setPlayerName('');
+    setName(null);
+    setShowPopover(false);
+    setMenuOpen(false);
+    router.push('/');
   };
 
   return (
@@ -74,32 +66,35 @@ export function NavBar() {
 
           {/* Player name */}
           <div className="hidden md:flex items-center gap-3 relative">
-            {showEdit ? (
-              <form
-                onSubmit={e => { e.preventDefault(); handleNameSave(); }}
-                className="flex items-center gap-2"
-              >
-                <input
-                  ref={inputRef}
-                  value={nameInput}
-                  onChange={e => setNameInput(e.target.value)}
-                  className="bg-navy-800 text-white text-sm px-3 py-1.5 rounded-xl border border-yellow-500 outline-none w-36"
-                  placeholder="Your name…"
-                  maxLength={30}
-                />
-                <button type="submit" className="text-yellow-400 text-sm font-semibold hover:text-yellow-300">✓</button>
-                <button type="button" onClick={() => setShowEdit(false)} className="text-white/40 text-sm hover:text-white">✕</button>
-              </form>
-            ) : playerName ? (
-              <button
-                onClick={() => setShowEdit(true)}
-                title="Change player name"
-                className="flex items-center gap-2 bg-navy-800 px-4 py-2 rounded-xl border border-white/10 hover:border-yellow-500/50 transition-colors group"
-              >
-                <span className="text-lg">👤</span>
-                <span className="text-white font-semibold text-sm">{playerName}</span>
-                <span className="text-white/30 text-xs group-hover:text-yellow-400 transition-colors">✏️</span>
-              </button>
+            {playerName ? (
+              <>
+                <button
+                  onClick={() => setShowPopover(p => !p)}
+                  className="flex items-center gap-2 bg-navy-800 px-4 py-2 rounded-xl border border-white/10 hover:border-yellow-500/50 transition-colors"
+                >
+                  <span className="text-lg">👤</span>
+                  <span className="text-white font-semibold text-sm">{playerName}</span>
+                  <span className="text-white/30 text-xs">▾</span>
+                </button>
+
+                {showPopover && (
+                  <>
+                    <div className="fixed inset-0" onClick={() => setShowPopover(false)} />
+                    <div className="absolute right-0 top-12 bg-navy-800 border border-white/10 rounded-2xl shadow-xl py-1 min-w-[160px] z-50">
+                      <div className="px-4 py-2 text-white/40 text-xs border-b border-white/10">
+                        Signed in as
+                        <div className="text-white font-semibold text-sm mt-0.5">{playerName}</div>
+                      </div>
+                      <button
+                        onClick={handleChangeUser}
+                        className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-white/5 transition-colors flex items-center gap-2"
+                      >
+                        🔄 Change user
+                      </button>
+                    </div>
+                  </>
+                )}
+              </>
             ) : (
               <Link href="/" className="text-yellow-400 text-sm font-semibold hover:text-yellow-300">
                 Set your name →
@@ -135,14 +130,21 @@ export function NavBar() {
                 </Link>
               );
             })}
-            <div className="px-4 py-3 text-white/60 text-sm border-t border-white/10 mt-2 pt-3">
+            <div className="border-t border-white/10 mt-2 pt-2">
               {playerName ? (
-                <button onClick={() => { setShowEdit(true); setMenuOpen(false); }} className="flex items-center gap-2">
-                  👤 Playing as: <span className="text-white font-semibold">{playerName}</span>
-                  <span className="text-yellow-400 text-xs">change</span>
-                </button>
+                <>
+                  <div className="px-4 py-2 text-white/40 text-xs">
+                    Playing as <span className="text-white font-semibold">{playerName}</span>
+                  </div>
+                  <button
+                    onClick={handleChangeUser}
+                    className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-white/5 rounded-xl flex items-center gap-2"
+                  >
+                    🔄 Change user
+                  </button>
+                </>
               ) : (
-                <Link href="/" onClick={() => setMenuOpen(false)} className="text-yellow-400 font-semibold">
+                <Link href="/" onClick={() => setMenuOpen(false)} className="block px-4 py-3 text-yellow-400 font-semibold">
                   Set your name →
                 </Link>
               )}
