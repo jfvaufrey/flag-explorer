@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { getPlayerName, setPlayerName } from '@/lib/storage'
 
@@ -15,7 +15,6 @@ const navLinks = [
 
 export function NavBar() {
   const pathname = usePathname();
-  const router = useRouter();
   const [playerName, setName] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
@@ -24,12 +23,12 @@ export function NavBar() {
     setName(getPlayerName());
   }, []);
 
-  const handleChangeUser = () => {
+  const handleChangePlayer = () => {
     setPlayerName('');
     setName(null);
     setShowPopover(false);
     setMenuOpen(false);
-    router.push('/');
+    window.location.href = '/';
   };
 
   return (
@@ -86,19 +85,19 @@ export function NavBar() {
                         <div className="text-white font-semibold text-sm mt-0.5">{playerName}</div>
                       </div>
                       <button
-                        onClick={handleChangeUser}
+                        onClick={handleChangePlayer}
                         className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-white/5 transition-colors flex items-center gap-2"
                       >
-                        🔄 Change user
+                        🔄 Change player
                       </button>
                     </div>
                   </>
                 )}
               </>
             ) : (
-              <Link href="/" className="text-yellow-400 text-sm font-semibold hover:text-yellow-300">
+              <button onClick={() => { window.location.href = '/'; }} className="text-yellow-400 text-sm font-semibold hover:text-yellow-300">
                 Set your name →
-              </Link>
+              </button>
             )}
           </div>
 
@@ -137,10 +136,10 @@ export function NavBar() {
                     Playing as <span className="text-white font-semibold">{playerName}</span>
                   </div>
                   <button
-                    onClick={handleChangeUser}
+                    onClick={handleChangePlayer}
                     className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-white/5 rounded-xl flex items-center gap-2"
                   >
-                    🔄 Change user
+                    🔄 Change player
                   </button>
                 </>
               ) : (
