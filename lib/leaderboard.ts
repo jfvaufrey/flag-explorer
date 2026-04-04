@@ -45,7 +45,11 @@ export async function submitScore({
 export async function getGlobalLeaderboard(): Promise<GlobalLeaderboardEntry[]> {
   await ensureTable()
   const rows = await sql`
-    SELECT * FROM leaderboard
+    SELECT * FROM (
+      SELECT DISTINCT ON (name) *
+      FROM leaderboard
+      ORDER BY name, score DESC
+    ) best
     ORDER BY score DESC
     LIMIT 20
   `
@@ -55,8 +59,12 @@ export async function getGlobalLeaderboard(): Promise<GlobalLeaderboardEntry[]> 
 export async function getRegionalLeaderboard(region: string): Promise<GlobalLeaderboardEntry[]> {
   await ensureTable()
   const rows = await sql`
-    SELECT * FROM leaderboard
-    WHERE region = ${region}
+    SELECT * FROM (
+      SELECT DISTINCT ON (name) *
+      FROM leaderboard
+      WHERE region = ${region}
+      ORDER BY name, score DESC
+    ) best
     ORDER BY score DESC
     LIMIT 20
   `
