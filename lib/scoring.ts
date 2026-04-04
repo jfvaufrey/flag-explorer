@@ -114,7 +114,8 @@ export const generateQuizQuestions = (flagPool: Flag[], allFlags: Flag[], count:
         statement = `${flag.country}'s capital is ${flag.capital}.`;
         answer = true;
       } else {
-        const randomFlag = allFlags.find(f => f.id !== flag.id && f.capital !== flag.capital);
+        const otherFlags = allFlags.filter(f => f.id !== flag.id && f.capital !== flag.capital);
+        const randomFlag = otherFlags[Math.floor(Math.random() * otherFlags.length)];
         statement = randomFlag
           ? `${flag.country}'s capital is ${randomFlag.capital}.`
           : `${flag.country} is in ${flag.continent === 'Asia' ? 'Europe' : 'Asia'}.`;
