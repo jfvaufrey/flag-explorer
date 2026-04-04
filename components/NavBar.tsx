@@ -1,8 +1,8 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
-import { getPlayerName } from '@/lib/storage'
+import { useState, useEffect, useRef } from 'react'
+import { getPlayerName, setPlayerName } from '@/lib/storage'
 
 const navLinks = [
   { href: '/', label: 'Home', emoji: '🏠' },
@@ -15,12 +15,30 @@ const navLinks = [
 
 export function NavBar() {
   const pathname = usePathname();
-  const [playerName, setPlayerName] = useState<string | null>(null);
+  const [playerName, setName] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setPlayerName(getPlayerName());
+    setName(getPlayerName());
   }, []);
+
+  useEffect(() => {
+    if (showEdit) {
+      setNameInput(playerName ?? '');
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [showEdit, playerName]);
+
+  const handleNameSave = () => {
+    const trimmed = nameInput.trim();
+    if (!trimmed) return;
+    setPlayerName(trimmed);
+    setName(trimmed);
+    setShowEdit(false);
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-navy-900/95 backdrop-blur-md">
@@ -55,12 +73,33 @@ export function NavBar() {
           </div>
 
           {/* Player name */}
-          <div className="hidden md:flex items-center gap-3">
-            {playerName ? (
-              <div className="flex items-center gap-2 bg-navy-800 px-4 py-2 rounded-xl border border-white/10">
+          <div className="hidden md:flex items-center gap-3 relative">
+            {showEdit ? (
+              <form
+                onSubmit={e => { e.preventDefault(); handleNameSave(); }}
+                className="flex items-center gap-2"
+              >
+                <input
+                  ref={inputRef}
+                  value={nameInput}
+                  onChange={e => setNameInput(e.target.value)}
+                  className="bg-navy-800 text-white text-sm px-3 py-1.5 rounded-xl border border-yellow-500 outline-none w-36"
+                  placeholder="Your name…"
+                  maxLength={30}
+                />
+                <button type="submit" className="text-yellow-400 text-sm font-semibold hover:text-yellow-300">✓</button>
+                <button type="button" onClick={() => setShowEdit(false)} className="text-white/40 text-sm hover:text-white">✕</button>
+              </form>
+            ) : playerName ? (
+              <button
+                onClick={() => setShowEdit(true)}
+                title="Change player name"
+                className="flex items-center gap-2 bg-navy-800 px-4 py-2 rounded-xl border border-white/10 hover:border-yellow-500/50 transition-colors group"
+              >
                 <span className="text-lg">👤</span>
                 <span className="text-white font-semibold text-sm">{playerName}</span>
-              </div>
+                <span className="text-white/30 text-xs group-hover:text-yellow-400 transition-colors">✏️</span>
+              </button>
             ) : (
               <Link href="/" className="text-yellow-400 text-sm font-semibold hover:text-yellow-300">
                 Set your name →
@@ -96,11 +135,18 @@ export function NavBar() {
                 </Link>
               );
             })}
-            {playerName && (
-              <div className="px-4 py-3 text-white/60 text-sm border-t border-white/10 mt-2 pt-3">
-                👤 Playing as: <span className="text-white font-semibold">{playerName}</span>
-              </div>
-            )}
+            <div className="px-4 py-3 text-white/60 text-sm border-t border-white/10 mt-2 pt-3">
+              {playerName ? (
+                <button onClick={() => { setShowEdit(true); setMenuOpen(false); }} className="flex items-center gap-2">
+                  👤 Playing as: <span className="text-white font-semibold">{playerName}</span>
+                  <span className="text-yellow-400 text-xs">change</span>
+                </button>
+              ) : (
+                <Link href="/" onClick={() => setMenuOpen(false)} className="text-yellow-400 font-semibold">
+                  Set your name →
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </div>
