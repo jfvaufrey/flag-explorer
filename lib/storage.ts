@@ -59,6 +59,7 @@ export const getPlayerName = (): string | null => {
 export const setPlayerName = (name: string): void => {
   if (!isBrowser()) return;
   localStorage.setItem('flag_player_name', name);
+  window.dispatchEvent(new CustomEvent('playerNameChanged', { detail: name }));
 };
 
 // Progress

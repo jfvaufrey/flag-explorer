@@ -21,6 +21,9 @@ export function NavBar() {
 
   useEffect(() => {
     setName(getPlayerName());
+    const handler = (e: CustomEvent) => setName(e.detail || null);
+    window.addEventListener('playerNameChanged', handler as EventListener);
+    return () => window.removeEventListener('playerNameChanged', handler as EventListener);
   }, []);
 
   const handleChangePlayer = () => {
